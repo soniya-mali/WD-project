@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Interactive Storybook</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0d1b2a;
+      font-family: 'Georgia', serif;
+      overflow-x: hidden;
+    }
+    header {
+      text-align: center;
+      padding: 2rem;
+      color: #f4f4f4;
+      background: linear-gradient(to right, #1e3c72, #2a5298);
+    }
+    header h1 {
+      font-size: 3rem;
+      margin: 0;
+    }
+    .book {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      margin: 2rem auto;
+      max-width: 1200px;
+      perspective: 1200px;
+    }
+    .page {
+      width: 250px;
+      height: 360px;
+      background: #fff;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transform-style: preserve-3d;
+      transition: transform 1s;
+      position: relative;
+      cursor: pointer;
+    }
+    .page:hover {
+      transform: rotateY(-180deg);
+    }
+    .front, .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      padding: 1rem;
+      box-sizing: border-box;
+      overflow-y: auto;
+    }
+    .front {
+      background: #fefae0;
+    }
+    .back {
+      background: #d4a373;
+      color: white;
+      transform: rotateY(180deg);
+    }
+    .front h2, .back h2 {
+      margin-top: 0;
+    }
+    .nav {
+      text-align: center;
+      margin: 2rem 0;
+    }
+    .nav a {
+      color: #ffa500;
+      margin: 0 1rem;
+      text-decoration: none;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📖 The Enchanted Journey 📖</h1>
+    <p>Hover over each page to flip and reveal the magic ✨</p>
+  </header>
+
+  <div class="book">
+    <!-- Story Pages -->
+    <!-- Pages will be inserted here -->
+    <!-- We'll inject 20 pages with script below -->
+  </div>
+
+  <audio id="flipSound" src="https://cdn.pixabay.com/audio/2022/03/15/audio_4587f2da38.mp3"></audio>
+
+  <script>
+    const book = document.querySelector('.book');
+    const pages = [
+      {
+        front: "🌌 The Beginning",
+        back: "✨ The Calling",
+        frontText: "In a quiet village, a child looked at the glowing moon with wonder.",
+        backText: "“Come find me,” whispered the moon. A trail of stars appeared. 🌠"
+      },
+      {
+        front: "🧭 The Journey Begins",
+        back: "🚪 The Hidden Door",
+        frontText: "With a satchel of dreams, the child took the first step into the unknown.",
+        backText: "Behind the old tree, a glowing door opened to a golden stairway."
+      },
+      {
+        front: "🌲 Into the Woods",
+        back: "🌙 Dreams Unfold",
+        frontText: "The forest whispered secrets of old as stars twinkled above.",
+        backText: "Each dream showed a path, winding through moonbeams and song."
+      },
+      {
+        front: "🦋 The Whispering Wind",
+        back: "🗺️ The Map Revealed",
+        frontText: "A gentle breeze carried messages only the heart could hear.",
+        backText: "On the map was a message: 'Trust the silence between the notes.'"
+      },
+      {
+        front: "🔥 The Fire Spirit",
+        back: "💨 Lessons in Fire",
+        frontText: "From the campfire rose a spirit, telling tales of forgotten flames.",
+        backText: "The spirit taught the child how to listen to the flame’s rhythm."
+      },
+      {
+        front: "🏞️ Valley of Dreams",
+        back: "💤 Dream Spirits",
+        frontText: "The valley shimmered, each step echoing laughter and lullabies.",
+        backText: "Here, dreams walked and talked, and some even danced."
+      },
+      {
+        front: "🪐 A Leap into Space",
+        back: "🌌 Star Trails",
+        frontText: "The child floated beyond clouds, chasing comets and curiosity.",
+        backText: "The stars wrote poetry that only travelers could read."
+      },
+      {
+        front: "👽 The Cosmic Friend",
+        back: "📡 Message Received",
+        frontText: "Among the stars was a creature with one eye and ten hearts.",
+        backText: "“You are not alone,” said the alien, handing over a memory stone."
+      },
+      {
+        front: "🧊 The Frozen Lake",
+        back: "💎 Ice Secrets",
+        frontText: "Ice cracked beneath their feet, revealing a glowing stone.",
+        backText: "In the stone was a song that made the cold feel warm."
+      },
+      {
+        front: "🌈 Bridge of Colors",
+        back: "🎨 Dancing Lights",
+        frontText: "A rainbow bridge led to the sky's hidden corner of dreams.",
+        backText: "The lights pulsed like heartbeat, guiding the child onward."
+      },
+      {
+        front: "🎭 Land of Masks",
+        back: "🎵 Echoes of Truth",
+        frontText: "Masks danced in midair, revealing stories of every face worn.",
+        backText: "Each mask revealed a memory, some joyful, some sad."
+      },
+      {
+        front: "🐉 The Sleeping Dragon",
+        back: "🔥 Awakening",
+        frontText: "A dragon slept atop gold, snoring tiny embers of fire.",
+        backText: "The dragon opened one eye and said, 'You are worthy.'"
+      },
+      {
+        front: "🕰️ Clockwork Castle",
+        back: "🔩 Time Rewinds",
+        frontText: "The castle ticked like a clock, gears spinning with destiny.",
+        backText: "Time twisted, replaying moments with deeper meaning."
+      },
+      {
+        front: "🌊 Sea of Stars",
+        back: "🧜 Secrets Beneath",
+        frontText: "The sea sparkled like midnight glass, whispering forgotten songs.",
+        backText: "Beneath the waves were voices, singing of hope and home."
+      },
+      {
+        front: "🕯️ The Guiding Flame",
+        back: "🌟 Path Reappears",
+        frontText: "A small flame lit the dark, never flickering, always warm.",
+        backText: "The flame grew, lighting a path to the final trial."
+      },
+      {
+        front: "⚡ Thunder Keep",
+        back: "🛡️ The Great Storm",
+        frontText: "Storm clouds gathered but parted before the child’s bright hope.",
+        backText: "The child stood tall, lightning reflecting in wide eyes."
+      },
+      {
+        front: "🦉 Owl of Wisdom",
+        back: "📚 Ancient Lore",
+        frontText: "An owl blinked thrice, offering riddles in return for answers.",
+        backText: "Each page of the book the owl gave revealed ancient truths."
+      },
+      {
+        front: "🌋 Mountain of Fire",
+        back: "🌪️ Power Within",
+        frontText: "The mountain trembled, welcoming the one brave enough to climb.",
+        backText: "From the volcano flowed a river of glowing crystal dreams."
+      },
+      {
+        front: "🧚 Realm of Fairies",
+        back: "🧝 The Queen's Gift",
+        frontText: "Fairies fluttered, giggling as they weaved dreams into wings.",
+        backText: "The fairy queen gifted a light that would never fade."
+      },
+      {
+        front: "🏡 Return Home",
+        back: "❤️ Magic in the Heart",
+        frontText: "The journey ended where it began—with wonder in their eyes.",
+        backText: "Home was still the same—but the child was forever changed."
+      }
+    ];
+
+    pages.forEach((p, i) => {
+      book.innerHTML += `
+        <div class="page" onclick="playFlipSound()">
+          <div class="front">
+            <h2>${i * 2 + 1}. ${p.front}</h2>
+            <p>${p.frontText}</p>
+          </div>
+          <div class="back">
+            <h2>${i * 2 + 2}. ${p.back}</h2>
+            <p>${p.backText}</p>
+          </div>
+        </div>
+      `;
+    });
+
+    function playFlipSound() {
+      document.getElementById("flipSound").play();
+    }
+  </script>
+</body>
+</html>
